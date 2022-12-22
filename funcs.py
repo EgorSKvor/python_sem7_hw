@@ -51,14 +51,14 @@ def edit_contact():
 def delete_contact():
     name = input('Enter name of conact u want to delete ')
 
-    with open('try.txt', 'r') as data:
+    with open('data_base.txt', 'r') as data:
         lst = data.read().split('\n')
     finder = lst.index(name)
     new_lst = []
     for i in range(finder, finder + 3):
         new_lst.append(lst[i])
 
-    with open('try.txt', 'r') as infile, open('outfile.txt', 'w') as outfile:
+    with open('data_base.txt', 'r'), open('data_base.txt', 'w') as outfile:
 
         for line in lst:
             if str(line) not in new_lst:
