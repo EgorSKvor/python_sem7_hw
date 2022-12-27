@@ -1,30 +1,32 @@
-from view import menu
+import view as v
+import database as d
+import format as f
 
 
-def show_list():
-    with open('data_base.txt', 'r') as data:
-        full_list = data.read()
-    print(full_list)
+def show_list(_format: str = "txt") -> list:
+    data = d.get_data(f.get_file_name(_format))
+    return f.from_txt(data)
 
 
 def find_contact():
+    # запрос на ввод делается во view, из спец. поля считываем текст
     finder = input('Enter first name of person u want to find ')
+    # вызвать функцию форматтера и сфррмировать список
     with open('data_base.txt', 'r') as data:
         full_list = data.read()
+    # пробежать по списку и найти список совпадений (ну или если не заморачиваться, то одно совпадение)
     tolist = full_list.split('\n')
     list_from = tolist.index(finder)
     for i in range(list_from, list_from + 3):
         print(str(tolist[i]))
-
+    # обновить view согласно тексту
     print('Found succesful! ')
 
 
-def add_contact():
-    enter = input('Enter new contact ').split()
-    for i in range(len(enter)):
-        write_data = f'\n{enter[i]}'
-        with open('data_base.txt', 'a') as data:
-            data.write(write_data)
+def add_contact(entries: list):
+    data = [item.get() for item in entries]
+    data_list = [data]
+    d.append_data(f.get_file_name("txt"), f.to_txt(data_list))
     print('Added succesful! ')
 
 
