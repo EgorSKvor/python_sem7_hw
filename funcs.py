@@ -5,49 +5,36 @@ import format as f
 
 def show_list(_format: str = "txt") -> list:
     data = d.get_data(f.get_file_name(_format))
-    return f.from_txt(data)
+    return f.from_txt(data)[:-1]
 
 
-def find_contact():
-    # запрос на ввод делается во view, из спец. поля считываем текст
-    finder = input('Enter first name of person u want to find ')
-    # вызвать функцию форматтера и сфррмировать список
-    with open('data_base.txt', 'r') as data:
-        full_list = data.read()
-    # пробежать по списку и найти список совпадений (ну или если не заморачиваться, то одно совпадение)
-    tolist = full_list.split('\n')
-    list_from = tolist.index(finder)
-    for i in range(list_from, list_from + 3):
-        print(str(tolist[i]))
-    # обновить view согласно тексту
-    print('Found succesful! ')
+def find_contact(info_list: list, format: str = "txt") -> int:
+    data_list = show_list(format)
+    index = 0
+    for info in data_list:
+        if list(info) == info_list:
+            return index
+        index += 1
+    return -1
 
 
 def add_contact(entries: list):
-    data = [item.get() for item in entries]
+    data = [item.get() if item.get() != '' else '-' for item in entries]
     data_list = [data]
     d.append_data(f.get_file_name("txt"), f.to_txt(data_list))
     print('Added succesful! ')
 
 
-def edit_contact():
-    with open('data_base.txt', 'r') as data:
-        dataa = data.read().split('\n')
-    todict = dict(zip([i for i in range(1, len(dataa))], dataa))
-    for k, v in todict.items():
-        s = str(k) + ' -> ' + str(v)
-        print(s)
-    input_key = int(input('Enter key of position u want to change '))
-    new_value = input('Enter new value ')
-    todict[input_key] = new_value
-    new_list = list(todict.values())
-    with open('data_base.txt', 'w') as data:
-        data.write('')
-    for i in range(len(new_list)):
-        write_data = f'\n{new_list[i]}'
-        with open('data_base.txt', 'a') as data:
-            data.write(write_data)
-    print('Edited succesful! ')
+def edit_contact(index: int, entries: list):
+    data_list = show_list()
+    print(data_list)
+    if index == -1:
+        print("Data wasn't selected! ")
+    else:
+        data_list[index] = [item.get() if item.get() !=
+                            '' else '-' for item in entries]
+        d.set_data(f.get_file_name("txt"), f.to_txt(data_list))
+        print('Edited succesful! ')
 
 
 def delete_contact():
