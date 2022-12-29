@@ -18,9 +18,9 @@ Ivanov
 386583358
 mobile
 
-Petr
-Petrov
-385030224
+Petro
+Petrovich
+3454667879
 -
 
 Petr
@@ -32,4 +32,39 @@ Yozhik
 Zeleniy
 3805803002
 zvonite v les
+
+New
+Person
+111111111
+new
+
+Helena
+Grey
+396739305
+-
+
+Masha
+Shach
+4973639408
+-
+
+Z
+S
+6296502002
+my
+
+V
+S
+86395692
+-
+
+N
+R
+529050270
+-
+
+N
+M
+92365962956
+-
 
