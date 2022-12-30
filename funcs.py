@@ -27,7 +27,6 @@ def add_contact(entries: list):
 
 def edit_contact(index: int, entries: list):
     data_list = show_list()
-    print(data_list)
     if index == -1:
         print("Data wasn't selected! ")
     else:
@@ -37,19 +36,16 @@ def edit_contact(index: int, entries: list):
         print('Edited succesful! ')
 
 
-def delete_contact():
-    name = input('Enter name of conact u want to delete ')
-
-    with open('data_base.txt', 'r') as data:
-        lst = data.read().split('\n')
-    finder = lst.index(name)
-    new_lst = []
-    for i in range(finder, finder + 3):
-        new_lst.append(lst[i])
-
-    with open('data_base.txt', 'r'), open('data_base.txt', 'w') as outfile:
-
-        for line in lst:
-            if str(line) not in new_lst:
-                outfile.write(f'\n{line}')
+def delete_contact(index: int):
+    data_list = show_list()
+    if index == -1:
+        print("Data wasn't selected! ")
+    else:
+        data_list.pop(index)
+        d.set_data(f.get_file_name("txt"), f.to_txt(data_list))
     print('Deleted succesful! ')
+
+
+def search_contact(text: str) -> list:
+    data_list = show_list()
+    return list(filter(lambda info: text in info, data_list))

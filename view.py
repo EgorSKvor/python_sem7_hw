@@ -6,22 +6,17 @@ import controller as c
 
 def menu(window: Tk):
     button_add_contact = Button(window, text="Добавить", font=(
-        "Courier New", 14, "bold"), width=10, bg="blue", fg="white", command=lambda: new_data(window, c.add))
+        "Courier New", 14, "bold"), width=10, bg="blue", fg="white", command=lambda: new_data(window, False, c.add))
     button_edit_contact = Button(window, text="Редактировать", font=(
-        "Courier New", 14, "bold"), width=14, bg="blue", fg="white", command=lambda: new_data(window, c.edit))
+        "Courier New", 14, "bold"), width=14, bg="blue", fg="white", command=lambda: new_data(window, True, c.edit))
     button_delete_contact = Button(window, text="Удалить", font=(
-        "Courier New", 14, "bold"), width=9, bg="blue", fg="white")
+        "Courier New", 14, "bold"), width=9, bg="blue", fg="white", command=lambda: delete_acception(window))
     button_find_contact = Button(window, text="Поиск", font=(
-        "Courier New", 14, "bold"), width=7, bg="blue", fg="white")
+        "Courier New", 14, "bold"), width=7, bg="blue", fg="white", command=lambda: search_pane(window))
     button_add_contact.grid(column=0, row=0)
     button_edit_contact.grid(column=1, row=0)
     button_delete_contact.grid(column=2, row=0)
     button_find_contact.grid(column=3, row=0)
-
-
-def input_choice():
-    choice = int(input('Choose option (1-6) '))
-    return choice
 
 
 def init_window() -> Tk:
@@ -30,7 +25,7 @@ def init_window() -> Tk:
     window.title("Телефонный справочник")
     window.geometry("800x300+600+200")
     window.configure(bg="#00FA9A")
-    window.resizable(True, True)
+    window.resizable(False, False)
     global columns
     columns = ["name", "surname", "number", "comment"]
     global table
@@ -83,15 +78,26 @@ def change_visibility(labels: list, entries: list, buttons: list, state: bool):
         buttons[1].grid_remove()
 
 
-def new_data(window, l_func):
+def new_data(window, state, l_func):
+    switch_remove(window)
     labels_text = ["Имя", "Фамилия", "Номер телефона", "Комментарий"]
     labels = []
     entries = []
+    contact = ['', '', '', '']
+    if state:
+        data = table.focus()
+        if data == '':
+            data = table.get_children()[0]
+        item = table.item(data)
+        contact = item["values"]
+        contact = [str(i) for i in contact]
     for i in range(len(labels_text)):
         labels.append(Label(window, text=labels_text[i], font=(
             "Courier New", 10, "bold"), bg="#00FA9A", fg="black"))
         labels[i].grid(column=5, row=1+i)
         entries.append(Entry(window))
+        entries[i].insert(0, contact[i])
+        entries[i].insert
         entries[i].grid(column=6, row=1+i)
     button_ok = Button(window, text="ОК", font=(
         "Courier New", 14, "bold"), width=7, bg="blue", fg="white", command=lambda: l_func(labels, entries, [button_ok, button_back]))
@@ -99,3 +105,66 @@ def new_data(window, l_func):
     button_back = Button(window, text="Назад", font=(
         "Courier New", 14, "bold"), width=7, bg="blue", fg="white", command=lambda: change_visibility(labels, entries, [button_ok, button_back], False))
     button_back.grid(column=6, row=5)
+
+
+def delete_acception(window):
+    switch_remove(window)
+    data = table.focus()
+    label_text = "Выберите контакт" if data == '' else "Подтвердить удаление\nвыбранного контакта?"
+    label = Label(window, text=label_text, font=(
+        "Courier New", 10, "bold"), bg="#00FA9A", fg="black")
+    label.grid(column=5, row=1, columnspan=2, rowspan=4, padx=40)
+    buttons = []
+    if data != '':
+        button_ok = Button(window, text="ОК", font=(
+            "Courier New", 14, "bold"), width=7, bg="blue", fg="white", command=lambda: delete(label, buttons, True))
+        button_ok.grid(column=5, row=5, padx=20)
+        buttons.append(button_ok)
+    button_back = Button(window, text="Назад", font=(
+        "Courier New", 14, "bold"), width=7, bg="blue", fg="white", command=lambda: delete(label, buttons, False))
+    button_back.grid(column=6, row=5, padx=40)
+    buttons.append(button_back)
+
+
+def delete(label, buttons, state: bool):
+    label.grid_remove()
+    for btn in buttons:
+        btn.grid_remove()
+    if state:
+        data = table.focus()
+        item = table.item(data)
+        contact = item["values"]
+        c.delete(contact)
+
+
+def switch_remove(window):
+    for item in window.grid_slaves():
+        if 4 < int(item.grid_info()["column"]) < 7:
+            item.grid_remove()
+
+
+def search_pane(window):
+    entry = Entry(window, font=("Courier New", 16, "bold"), width=15)
+    entry.grid(column=5, row=1, columnspan=2, rowspan=4, padx=40)
+    buttons = []
+    button_search = Button(window, text="Найти", font=(
+        "Courier New", 14, "bold"), width=7, bg="blue", fg="white", command=lambda: search(entry, buttons, True))
+    button_search.grid(column=5, row=5, padx=20)
+    buttons.append(button_search)
+    button_back = Button(window, text="Назад", font=(
+        "Courier New", 14, "bold"), width=7, bg="blue", fg="white", command=lambda: search(entry, buttons, False))
+    button_back.grid(column=6, row=5, padx=40)
+    buttons.append(button_back)
+
+
+def search(entry, buttons, state):
+    text = str(entry.get())
+    if state:
+        c.search(text)
+    else:
+        entry.grid_remove()
+        for btn in buttons:
+            btn.grid_remove()
+        if len(table.get_children()) > 0:
+            table.delete(*table.get_children())
+        c.search('')
