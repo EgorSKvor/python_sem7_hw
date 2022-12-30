@@ -9,32 +9,37 @@ def button():
 
 
 def add(labels, entries, buttons):
-    add_contact(entries)
+    format = get_format()
+    add_contact(entries, format)
     change_visibility(labels, entries, buttons, False)
-    show_list(funcs.show_list())
+    show_list(funcs.show_list(format))
 
 
 def edit(labels, entries, buttons):
-    table = show_list(funcs.show_list())
+    format = get_format()
+    table = show_list(funcs.show_list(format))
     data = table.focus()
     item = table.item(data)
     contact = item["values"]
     contact = [str(i) for i in contact]
-    index = funcs.find_contact(contact)
-    funcs.edit_contact(index, entries)
+    index = funcs.find_contact(contact, format)
+    funcs.edit_contact(index, entries, format)
     change_visibility(labels, entries, buttons, False)
-    show_list(funcs.show_list())
+    show_list(funcs.show_list(format))
 
 
 def delete(contact: list):
+    format = get_format()
     contact = [str(i) for i in contact]
-    index = funcs.find_contact(contact)
-    funcs.delete_contact(index)
-    show_list(funcs.show_list())
+    index = funcs.find_contact(contact, format)
+    funcs.delete_contact(index, format)
+    show_list(funcs.show_list(format))
 
 
 def search(text: str):
+    format = get_format()
+    print(format)
     if text != '':
-        show_list(funcs.search_contact(text))
+        show_list(funcs.search_contact(text, format))
     else:
-        show_list(funcs.show_list())
+        show_list(funcs.show_list(format))

@@ -13,6 +13,12 @@ def menu(window: Tk):
         "Courier New", 14, "bold"), width=9, bg="blue", fg="white", command=lambda: delete_acception(window))
     button_find_contact = Button(window, text="Поиск", font=(
         "Courier New", 14, "bold"), width=7, bg="blue", fg="white", command=lambda: search_pane(window))
+    radio_btn_txt = Radiobutton(window, text="txt", variable=var, value=0, font=(
+        "Courier New", 10, "bold"), bg="#00FA9A", fg="black", width=15, command=lambda: show_list(funcs.show_list(get_format())))
+    radio_btn_csv = Radiobutton(window, text="csv", variable=var, value=1, font=(
+        "Courier New", 10, "bold"), bg="#00FA9A", fg="black", width=15, command=lambda: show_list(funcs.show_list(get_format())))
+    radio_btn_txt.grid(column=5, row=0)
+    radio_btn_csv.grid(column=6, row=0)
     button_add_contact.grid(column=0, row=0)
     button_edit_contact.grid(column=1, row=0)
     button_delete_contact.grid(column=2, row=0)
@@ -30,7 +36,10 @@ def init_window() -> Tk:
     columns = ["name", "surname", "number", "comment"]
     global table
     table = ttk.Treeview(columns=columns, show="headings", height=11)
-    show_list(funcs.show_list())
+    global var
+    var = BooleanVar()
+    var.set(0)
+    show_list(funcs.show_list(get_format()))
     return window
 
 
@@ -50,7 +59,7 @@ def show_list(contacts_list: list) -> ttk.Treeview:
     data = table.focus()
     items = list(table.item(data, 'values'))
     item_copy = items.copy()
-    if len(table.get_children()) > 1:
+    if len(table.get_children()) > 0:
         table.delete(*table.get_children())
     for item in contacts_list:
         i = table.insert("", END, values=item)
@@ -139,7 +148,7 @@ def delete(label, buttons, state: bool):
 
 def switch_remove(window):
     for item in window.grid_slaves():
-        if 4 < int(item.grid_info()["column"]) < 7:
+        if (4 < int(item.grid_info()["column"]) < 7) and (int(item.grid_info()["row"]) > 0):
             item.grid_remove()
 
 
@@ -168,3 +177,9 @@ def search(entry, buttons, state):
         if len(table.get_children()) > 0:
             table.delete(*table.get_children())
         c.search('')
+
+
+def get_format() -> str:
+    match var.get():
+        case 0: return "txt"
+        case 1: return "csv"
