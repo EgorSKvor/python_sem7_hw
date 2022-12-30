@@ -18,11 +18,6 @@ Ivanov
 386583358
 mobile
 
-Petro
-Petrovich
-3454667879
--
-
 Petr
 Petrov
 385030224
@@ -39,7 +34,7 @@ Person
 new
 
 Helena
-Grey
+Gray
 396739305
 -
 
@@ -53,18 +48,13 @@ S
 6296502002
 my
 
-V
-S
-86395692
--
-
 N
 R
 529050270
 -
 
-N
-M
-92365962956
--
+Anton
+Antonov
+92457497639
+double
 
